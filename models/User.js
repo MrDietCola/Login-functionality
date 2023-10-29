@@ -4,7 +4,6 @@ const sequelize = require('../config/connection');
 
 class User extends Model {
   checkPassword(userPassword) {
-    // TODO: Complete the instance method
     return bcrypt.compare(userPassword, this.password)
   }
 }
@@ -38,7 +37,6 @@ User.init(
     },
   },
   {
-    // When adding hooks via the init() method, they go below
     hooks: {
       // Use the beforeCreate hook to work with data before a new instance is created
       beforeCreate: async (newUserData) => {

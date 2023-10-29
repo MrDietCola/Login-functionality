@@ -1,10 +1,13 @@
 const router = require('express').Router();
-const User = require('../../models/User.js');
+const { User, TaskForUser, Task } = require('../../models');
 
 // GET all users
 router.get('/', async (req, res) => {
   try {
-    const userData = await User.findAll();
+    const userData = await User.findAll({
+      include: [{ model: Task, through: TaskForUser, as: 'task_by_user' }, { model: Task }]
+
+    });
     res.status(200).json(userData);
   } catch (err) {
     res.status(500).json(err);
@@ -14,7 +17,9 @@ router.get('/', async (req, res) => {
 // GET one user
 router.get('/:id', async (req, res) => {
   try {
-    const userData = await User.findByPk(req.params.id);
+    const userData = await User.findByPk(req.params.id, {
+      include: [{ model: Task, through: TaskForUser, as: 'task_by_user' }, { model: Task }]
+    });
     if (!userData) {
       res.status(404).json({ message: 'No user with this id!' });
       return;
@@ -73,6 +78,26 @@ router.put('/:id', async (req, res) => {
       return;
     }
     res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// DELETE a user
+router.delete('/:id', async (req, res) => {
+  try {
+    const userData = await User.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!userData) {
+      res.status(404).json({ message: 'No user found with that id!' });
+      return;
+    }
+
+    res.status(200).json(userData, 'User has been removed');
   } catch (err) {
     res.status(500).json(err);
   }

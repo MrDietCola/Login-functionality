@@ -1,3 +1,5 @@
+let userData;
+
 $('#login-btn').on('click', function (e) {
   e.preventDefault();
   const email = $('#email').val();
@@ -31,9 +33,10 @@ const login = (userInfo) =>
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.message);
-      if (data.message === 'You are now logged in!') {
-        window.location.href = '/home';
+      console.log(data.message, data.user);
+      if (data.user) {
+        userData = data.user
+        window.location.href = `/home?userid=${userData.id}`;
       }
     })
     .catch((error) => {
@@ -55,3 +58,4 @@ const addUser = (newUser) =>
       .catch((error) => {
         console.error('Error:', error);
       });
+

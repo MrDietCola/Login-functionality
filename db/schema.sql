@@ -4,4 +4,3 @@ CREATE DATABASE myUser_db;
 
 USE myUser_db;
 
-

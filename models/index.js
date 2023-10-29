@@ -1,23 +1,31 @@
 const User = require('./User');
 const Task = require('./Task');
-const LibraryCard = require('./LibraryCard');
+const TaskForUser = require('./TaskForUser')
 
-Reader.hasOne(LibraryCard, {
-  foreignKey: 'reader_id',
-  onDelete: 'CASCADE',
+Task.belongsTo(User, {
+  foreignKey: 'author_id'
+})
+
+User.hasMany(Task, {
+  foreignKey: 'author_id'
+})
+
+User.belongsToMany(Task, {
+  through: {
+    model: TaskForUser,
+    unique: false
+  },
+  as: 'task_by_user'
 });
 
-Reader.hasMany(Book, {
-  foreignKey: 'reader_id',
-  onDelete: 'CASCADE',
-});
+Task.belongsToMany(User, {
+  through: {
+    model: TaskForUser,
+    unique: false
+  },
+  as: 'user_by_task'
+})
 
-Book.belongsTo(Reader, {
-  foreignKey: 'reader_id',
-});
 
-LibraryCard.belongsTo(Reader, {
-  foreignKey: 'reader_id',
-});
 
-module.exports = { Reader, Book, LibraryCard };
+module.exports = { User, Task, TaskForUser };

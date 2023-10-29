@@ -20,7 +20,8 @@ body {
   display: block;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
   width: 94%;
   padding: 8px;
   border: 1px solid #ccc;
